@@ -29,8 +29,8 @@ const Input = () => {
         console.log(resultJson.objects);
         setIsLoading(false);
       }
-    } catch (err) {
-      setError("Request wrong!");
+    } catch (err: any) {
+      setError(err.message);
       setIsLoading(false);
     }
   };
