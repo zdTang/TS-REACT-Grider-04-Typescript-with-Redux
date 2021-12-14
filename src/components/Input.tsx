@@ -5,19 +5,28 @@ const Input = () => {
   const [Repository, setRepository] = useState<any>(null);
   const [isError, setIsError] = useState(false);
   const [Error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const clickHandler = async () => {
+    setIsLoading(true);
     // Get data from Api
-    const result = await fetch(
-      `https://registry.npmjs.org/-/v1/search?text=${term}`
-    );
-    if (!result.ok) {
+    try {
+      const result = await fetch(
+        `https://registry.npmjs.org/-/v1/search?text=${term}`
+      );
+      if (!result.ok) {
+        setIsError(true);
+        setError("Data wrong!");
+      } else {
+        // update our state
+        const resultJson = await result.json();
+        setRepository(resultJson.objects);
+        setIsLoading(false);
+      }
+    } catch (err) {
       setIsError(true);
       setError("Request wrong!");
+      setIsLoading(false);
     }
-    // update our state
-    const resultJson = await result.json();
-    setRepository(resultJson.objects);
-    console.log(resultJson.objects);
   };
   return (
     <div>
@@ -30,6 +39,7 @@ const Input = () => {
       <div>
         <button onClick={clickHandler}>Submit</button>
       </div>
+      {isLoading && "is Loading..."}
       {isError && Error}
       {Repository &&
         Repository.map((item: any) => (
