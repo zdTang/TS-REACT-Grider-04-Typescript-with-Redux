@@ -31,7 +31,6 @@ export const searchRepositories = (term: string) => {
       dispatch({
         type: ActionType.SEARCH_REPOSITORIES_ERROR,
         payload: err.message, //mike change
-        //payload: "err.message",
       });
     }
   };
