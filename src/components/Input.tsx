@@ -1,8 +1,16 @@
 import React, { useState } from "react";
 
+// create type for API data
+interface Repo {
+  name: string;
+}
+interface item {
+  package: Repo;
+}
+
 const Input = () => {
   const [term, setTerm] = useState("");
-  const [Repository, setRepository] = useState<any>(null);
+  const [Repository, setRepository] = useState<item[]>([]);
   const [Error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const clickHandler = async () => {
@@ -18,6 +26,7 @@ const Input = () => {
         // update our state
         const resultJson = await result.json();
         setRepository(resultJson.objects);
+        console.log(resultJson.objects);
         setIsLoading(false);
       }
     } catch (err) {
@@ -25,21 +34,21 @@ const Input = () => {
       setIsLoading(false);
     }
   };
+
+  const enteredItemHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTerm(e.target.value);
+  };
   return (
     <div>
       <h1>this is child</h1>
-      <input
-        type="text"
-        value={term}
-        onChange={(e) => setTerm(e.target.value)}
-      ></input>
+      <input type="text" value={term} onChange={enteredItemHandler}></input>
       <div>
         <button onClick={clickHandler}>Submit</button>
       </div>
       {isLoading && "is Loading..."}
       {Error.trim().length > 0 && Error}
       {Repository &&
-        Repository.map((item: any) => (
+        Repository.map((item: item) => (
           <div key={item.package.name}>{item.package.name}</div>
         ))}
     </div>
