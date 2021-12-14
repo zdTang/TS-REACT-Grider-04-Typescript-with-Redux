@@ -3,7 +3,6 @@ import React, { useState } from "react";
 const Input = () => {
   const [term, setTerm] = useState("");
   const [Repository, setRepository] = useState<any>(null);
-  const [isError, setIsError] = useState(false);
   const [Error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const clickHandler = async () => {
@@ -14,7 +13,6 @@ const Input = () => {
         `https://registry.npmjs.org/-/v1/search?text=${term}`
       );
       if (!result.ok) {
-        setIsError(true);
         setError("Data wrong!");
       } else {
         // update our state
@@ -23,7 +21,6 @@ const Input = () => {
         setIsLoading(false);
       }
     } catch (err) {
-      setIsError(true);
       setError("Request wrong!");
       setIsLoading(false);
     }
@@ -40,7 +37,7 @@ const Input = () => {
         <button onClick={clickHandler}>Submit</button>
       </div>
       {isLoading && "is Loading..."}
-      {isError && Error}
+      {Error.trim().length > 0 && Error}
       {Repository &&
         Repository.map((item: any) => (
           <div key={item.package.name}>{item.package.name}</div>
